@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cutiedevu · Developer</title>
+<link rel="icon" type="image/gif" href="https://cdn.discordapp.com/attachments/1235744013236043888/1244832388974903302/pinterest_789959590919857540.gif?ex=69aaddc1&is=69a98c41&hm=df28d3eaf16edaf3de2a02c258a7e0e6cb86a7d692b99b37fbc41690ee69d758&">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root {
+  --bg: #000000;
+  --fg: #f0f0f5;
+  --muted: rgba(240,240,245,0.6);
+  --accent: #00ffee48;
+  --accent-secondary: #00b8a95b;
+  --card: rgba(255,255,255,0.03);
+  --border: rgba(0,255,236,0.15);
+  --glow-primary: rgba(0,255,236,0.6);
+  --glow-secondary: rgba(0,255,236,0.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--fg);
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Custom Cursor */
+.cursor {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s ease, background 0.2s ease;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+
+.cursor.hover {
+  transform: translate(-50%, -50%) scale(1.8);
+  background: rgba(0,255,236,0.2);
+  border-color: var(--accent);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { 
+  background: linear-gradient(180deg, var(--accent), var(--accent-secondary));
+  border-radius: 3px;
+}
+
+/* Canvas Background */
+#particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Background GIF */
+.bg-gif {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  filter: blur(8px) brightness(0.15) saturate(0.8);
+  z-index: -2;
+  transform: scale(1.1);
+}
+
+/* Animated Gradient Overlay */
+.gradient-overlay {
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,255,236,0.1), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0,255,236,0.05), transparent);
+  z-index: -1;
+  animation: gradientShift 15s ease-in-out infinite alternate;
+}
+
+@keyframes gradientShift {
+  0% { opacity: 0.8; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.1); }
+}
+
+/* Animated Mesh Grid */
+.mesh-grid {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0,255,236,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,236,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  z-index: 0;
+  animation: gridMove 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes gridMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(60px, 60px); }
+}
+
+/* Floating Orbs */
+.orbs-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: orbFloat 25s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--glow-primary) 0%, transparent 70%);
+  top: -150px;
+  right: -100px;
+  animation-delay: 0s;
+  opacity: 0.4;
+}
+
+.orb-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--glow-secondary) 0%, transparent 70%);
+  bottom: -100px;
+  left: -100px;
+  animation-delay: -8s;
+  opacity: 0.3;
+}
+
+.orb-3 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(0,150,136,0.3) 0%, transparent 70%);
+  top: 40%;
+  left: 30%;
+  animation-delay: -16s;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  25% { transform: translate(50px, -40px) scale(1.1) rotate(5deg); }
+  50% { transform: translate(-30px, 50px) scale(0.9) rotate(-5deg); }
+  75% { transform: translate(40px, 30px) scale(1.05) rotate(3deg); }
+}
+
+/* Mouse Glow Follower */
+.mouse-glow {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0,255,236,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
+}
+
+/* Main Container */
+.main-container {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* Profile Card */
+.card {
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(40px);
+  border: 1px solid var(--border);
+  padding: 50px 45px;
+  border-radius: 32px;
+  text-align: center;
+  width: 100%;
+  max-width: 380px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.8;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(0,255,236,0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(0,255,236,0.4);
+  box-shadow: 
+    0 25px 80px rgba(0,255,236,0.15),
+    0 0 60px rgba(0,255,236,0.1);
+}
+
+/* Animated Border */
+.card-border {
+  position: absolute;
+  inset: -2px;
+  border-radius: 34px;
+  background: conic-gradient(from 0deg, var(--accent), #000, var(--accent));
+  background-size: 400% 400%;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  animation: borderRotate 6s linear infinite;
+}
+
+.card:hover .card-border {
+  opacity: 0.6;
+}
+
+@keyframes borderRotate {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ========================================
+   ENHANCED AVATAR ANIMATION
+   ======================================== */
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 28px;
+  cursor: none;
+}
+
+/* Sonar Pulse Effect */
+.avatar-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,255,236,0.3);
+  opacity: 0;
+  z-index: 0;
+  animation: sonarPulse 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes sonarPulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+    border-color: rgba(0,255,236,0.3);
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+    border-color: var(--accent);
+  }
+}
+
+/* Secondary Ring - Dashed Rotating */
+.avatar-ring-secondary {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 2px dashed rgba(0,255,236,0.2);
+  animation: ringRotateReverse 30s linear infinite;
+  z-index: 1;
+}
+
+@keyframes ringRotateReverse {
+  to { transform: rotate(-360deg); }
+}
+
+/* Primary Ring - Gradient Rotating */
+.avatar-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--accent), var(--accent-secondary), var(--accent));
+  animation: ringRotate 8s linear infinite;
+  z-index: 2;
+  opacity: 0.9;
+}
+
+@keyframes ringRotate {
+  to { transform: rotate(360deg); }
+}
+
+.avatar-ring::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: var(--bg);
+  border-radius: 50%;
+}
+
+/* Avatar Image */
+.avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  position: relative;
+  z-index: 3;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease;
+  filter: brightness(1) saturate(1);
+}
+
+.avatar:hover {
+  transform: scale(1.08);
+  filter: brightness(1.1) saturate(1.1);
+}
+
+/* Holographic Shine Effect */
+.avatar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.15),
+    rgba(0,255,236,0.4),
+    rgba(255,255,255,0.15),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: left 0.8s ease-in-out;
+  z-index: 4;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.avatar-wrapper:hover .avatar::after {
+  left: 150%;
+}
+
+/* Glow Shadow on Hover */
+.avatar-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 20px;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  filter: blur(20px);
+}
+
+.avatar-wrapper:hover::after {
+  opacity: 0.4;
+}
+
+/* Status Badge */
+.status-badge {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 28px;
+  height: 28px;
+  background: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  border: 2px solid var(--accent);
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: statusPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(34,197,94,0.6);
+}
+
+@keyframes statusPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.85); opacity: 0.7; }
+}
+
+/* Title */
+.card h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+  position: relative;
+}
+
+/* Typing Effect */
+.typing-text {
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 16px;
+  min-height: 20px;
+  font-family: 'Space Grotesk', monospace;
+  text-shadow: 0 0 10px rgba(0,255,236,0.4);
+}
+
+.typing-text::after {
+  content: '|';
+  animation: blink 1s infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Bio */
+.bio {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 28px 0;
+}
+
+/* Social Links */
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.socials a {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: rgba(0,255,236,0.03);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--muted);
+  font-size: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.socials a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.socials a:hover {
+  transform: translateY(-6px) scale(1.05);
+  border-color: transparent;
+  color: #000;
+  box-shadow: 0 15px 40px rgba(0,255,236,0.3);
+}
+
+.socials a:hover::before {
+  opacity: 1;
+}
+
+.socials a i {
+  position: relative;
+  z-index: 1;
+}
+
+/* View Counter */
+.view-count {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.view-count:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 30px rgba(0,255,236,0.2);
+}
+
+.view-dot {
+  width: 8px;
+  height: 8px;
+  background: #00FFEC;
+  border-radius: 50%;
+  animation: viewPulse 2s infinite;
+  box-shadow: 0 0 10px rgba(0,255,236,0.5);
+}
+
+@keyframes viewPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(0,255,236,0.5); }
+  50% { transform: scale(1.2); box-shadow: 0 0 20px rgba(0,255,236,0.8); }
+}
+
+/* Admin Hint */
+.admin-hint {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  font-size: 12px;
+  color: var(--accent);
+  opacity: 0.4;
+  z-index: 10;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  bottom: 90px;
+  right: 24px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toast {
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  padding: 16px 24px;
+  border-radius: 16px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform: translateX(120%);
+  opacity: 0;
+  animation: toastSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.toast.success {
+  border-color: var(--accent);
+  background: rgba(0,255,236,0.1);
+}
+
+@keyframes toastSlideIn {
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.toast-out {
+  animation: toastSlideOut 0.4s ease-out forwards;
+}
+
+@keyframes toastSlideOut {
+  to { transform: translateX(120%); opacity: 0; }
+}
+
+/* Entrance Animations */
+.card {
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+  animation: cardEntrance 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+}
+
+@keyframes cardEntrance {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.stagger-in > * {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: staggerFadeIn 0.6s ease-out forwards;
+}
+
+/* Adjusted delays for inserted element */
+.stagger-in > *:nth-child(1) { animation-delay: 0.5s; }  /* Avatar */
+.stagger-in > *:nth-child(2) { animation-delay: 0.6s; }  /* H1 */
+.stagger-in > *:nth-child(3) { animation-delay: 0.7s; }  /* Typing */
+.stagger-in > *:nth-child(4) { animation-delay: 0.8s; }  /* Bio */
+.stagger-in > *:nth-child(5) { animation-delay: 0.9s; }  /* Divider */
+.stagger-in > *:nth-child(6) { animation-delay: 1.0s; }  /* Discord Status */
+.stagger-in > *:nth-child(7) { animation-delay: 1.1s; }  /* Socials */
+
+@keyframes staggerFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Floating Elements */
+.floating-element {
+  position: fixed;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.5;
+  animation: float 6s ease-in-out infinite;
+}
+
+.floating-element svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--accent);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.fe-1 { top: 15%; left: 10%; animation-delay: 0s; }
+.fe-2 { top: 25%; right: 15%; animation-delay: -2s; }
+.fe-3 { bottom: 30%; left: 8%; animation-delay: -4s; }
+.fe-4 { top: 60%; right: 8%; animation-delay: -1s; }
+.fe-5 { bottom: 15%; right: 25%; animation-delay: -3s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+/* Discord Status Styles */
+.discord-status {
+  margin: 15px 0;
+  padding: 15px;
+  background: rgba(0,255,236,0.03);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+
+.status-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  justify-content: center;
+}
+
+.presence-container {
+  min-height: 60px;
+}
+
+.presence-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  border-left: 3px solid;
+}
+
+/* Status border colors - using theme colors */
+.presence-item.online { border-left-color: var(--accent); }
+.presence-item.idle { border-left-color: #00b8a95b; }
+.presence-item.dnd { border-left-color: #ef4444; }
+.presence-item.offline { border-left-color: #6b7280; }
+
+.presence-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.presence-details {
+  flex: 1;
+  text-align: left;
+}
+
+.presence-name {
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--fg);
+}
+
+.presence-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.presence-status-dot.online { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.presence-status-dot.idle { background: #eab308; box-shadow: 0 0 8px #eab308; }
+.presence-status-dot.dnd { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+.presence-status-dot.offline { background: #6b7280; }
+
+.presence-activity {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.presence-activity span {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.presence-timestamp {
+  font-size: 10px;
+  color: var(--muted);
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+.presence-loading, .presence-error {
+  text-align: center;
+  padding: 15px;
+  color: var(--muted);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.presence-error {
+  color: #ef4444;
+  flex-direction: column;
+}
+
+.presence-error small {
+  opacity: 0.7;
+  font-size: 11px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  body { cursor: auto; }
+  .cursor, .cursor-dot { display: none; }
+  .card { padding: 36px 28px; max-width: 340px; }
+  .card h1 { font-size: 28px; }
+  .avatar { width: 110px; height: 110px; }
+  .avatar-ring { inset: -5px; }
+  .avatar-ring-secondary { inset: -12px; }
+  .socials a { width: 44px; height: 44px; font-size: 18px; }
+  .floating-element { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<!-- Particles Canvas -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- Background GIF -->
+<img class="bg-gif" src="https://cdn.discordapp.com/attachments/1235744013236043888/1253141060033445926/a_08d826ddfcef8408b741cd885e08b48f-09647.gif?ex=69aac54e&is=69a973ce&hm=032faddcf794541fa7a3c86799e1bb613e9fd2b78b6fffc150102f369780b263&" alt="Background">
+
+<!-- Gradient Overlay -->
+<div class="gradient-overlay"></div>
+
+<!-- Mesh Grid -->
+<div class="mesh-grid"></div>
+
+<!-- Floating Orbs -->
+<div class="orbs-container">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- Mouse Glow -->
+<div class="mouse-glow" id="mouse-glow"></div>
+
+<!-- Floating Decorative Elements -->
+<div class="floating-element fe-1">
+  <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+</div>
+<div class="floating-element fe-2">
+  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+</div>
+<div class="floating-element fe-3">
+  <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+</div>
+<div class="floating-element fe-4">
+  <svg viewBox="0 0 24 24"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+</div>
+<div class="floating-element fe-5">
+  <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+</div>
+
+<div class="admin-hint">Web Developer - Cutiedevu</div>
+
+<!-- Main Container -->
+<div class="main-container">
+  <div class="card">
+    <div class="card-border"></div>
+    <div class="stagger-in">
+      <!-- Avatar Structure Updated for GIF compatibility -->
+      <div class="avatar-wrapper">
+        <div class="avatar-ring-secondary"></div>
+        <div class="avatar-ring"></div>
+        <div class="avatar-img-container">
+          <img class="avatar" src="https://cdn.discordapp.com/attachments/1235744013236043888/1244832388974903302/pinterest_789959590919857540.gif?ex=69aaddc1&is=69a98c41&hm=df28d3eaf16edaf3de2a02c258a7e0e6cb86a7d692b99b37fbc41690ee69d758&" alt="Avatar">
+          <div class="avatar-shine"></div>
+        </div>
+      </div>
+      
+      <h1>Kannan Kuttan</h1>
+      <div class="typing-text" id="typing-text"></div>
+      
+      <p class="bio">Silence is better than explanation<br>Web developer and Gamer</p>
+      
+      <div class="divider"></div>
+
+      <!-- Discord Status Section -->
+      <div class="discord-status">
+        <div class="status-header">
+          <i class="fab fa-discord"></i>
+          <span>Discord Presence</span>
+        </div>
+        <div id="discord-presence" class="presence-container">
+          <div class="presence-loading">Loading status...</div>
+        </div>
+      </div>
+      
+      <div class="socials">
+        <a href="https://www.instagram.com/_kannan_kuttan._?igsh=MWhzdDdhZXBhNm1jNw==" title="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.snapchat.com/add/r_enin25?share_id=dsvis80ef5U&locale=en-IN" title="Snapchat" target="_blank"><i class="fab fa-snapchat"></i></a>
+        <a href="https://youtube.com/@kannankuttan_25?si=rlNiIYrVeGddv3cJ" title="Youtube" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a href="https://discord.gg/MezKJrSRZU" title="Discord Server" target="_blank"><i class="fab fa-discord"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- View Counter -->
+<div class="view-count">
+  <div class="view-dot"></div>
+  <span id="live-count">247 online</span>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ========== Custom Cursor ==========
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursor-dot');
+const mouseGlow = document.getElementById('mouse-glow');
+let mouseX = 0, mouseY = 0;
+let cursorX = 0, cursorY = 0;
+let glowX = 0, glowY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+function animateCursor() {
+  const ease = 0.15;
+  const glowEase = 0.08;
+  
+  cursorX += (mouseX - cursorX) * ease;
+  cursorY += (mouseY - cursorY) * ease;
+  glowX += (mouseX - glowX) * glowEase;
+  glowY += (mouseY - glowY) * glowEase;
+  
+  if (cursor && cursorDot) {
+    cursor.style.left = cursorX + 'px';
+    cursor.style.top = cursorY + 'px';
+    cursorDot.style.left = mouseX + 'px';
+    cursorDot.style.top = mouseY + 'px';
+  }
+  
+  if (mouseGlow) {
+    mouseGlow.style.left = glowX + 'px';
+    mouseGlow.style.top = glowY + 'px';
+  }
+  
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+// Cursor hover effect
+document.querySelectorAll('a, button, .socials a, .avatar-wrapper').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor && cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor && cursor.classList.remove('hover'));
+});
+
+// ========== Particles ==========
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+const particleCount = 60;
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+  constructor() {
+    this.reset();
+  }
+  
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2 + 0.5;
+    this.speedX = (Math.random() - 0.5) * 0.5;
+    this.speedY = (Math.random() - 0.5) * 0.5;
+    this.opacity = Math.random() * 0.5 + 0.2;
+    // Changed hue to Cyan/Teal range (~180 degrees)
+    this.hue = 175 + Math.random() * 10; 
+  }
+  
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    
+    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+      this.reset();
+    }
+  }
+  
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${this.hue}, 100%, 60%, ${this.opacity})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < particleCount; i++) {
+  particles.push(new Particle());
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  particles.forEach(p => {
+    p.update();
+    p.draw();
+  });
+  
+  // Draw connections
+  particles.forEach((p1, i) => {
+    particles.slice(i + 1).forEach(p2 => {
+      const dx = p1.x - p2.x;
+      const dy = p1.y - p2.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      
+      if (dist < 150) {
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        // Changed connection line color to Cyan
+        ctx.strokeStyle = `rgba(0, 255, 236, ${0.1 * (1 - dist / 150)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    });
+  });
+  
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ========== Typing Effect ==========
+const typingTexts = ['Gamer', 'Creative Mind', 'Friendly Relationships Keeper'];
+const typingElement = document.getElementById('typing-text');
+let textIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+
+function typeText() {
+  const currentText = typingTexts[textIndex];
+  
+  if (isDeleting) {
+    typingElement.textContent = currentText.substring(0, charIndex - 1);
+    charIndex--;
+  } else {
+    typingElement.textContent = currentText.substring(0, charIndex + 1);
+    charIndex++;
+  }
+  
+  let delay = isDeleting ? 50 : 100;
+  
+  if (!isDeleting && charIndex === currentText.length) {
+    delay = 2000;
+    isDeleting = true;
+  } else if (isDeleting && charIndex === 0) {
+    isDeleting = false;
+    textIndex = (textIndex + 1) % typingTexts.length;
+    delay = 500;
+  }
+  
+  setTimeout(typeText, delay);
+}
+setTimeout(typeText, 1500);
+
+// ========== Live Counter ==========
+function updateLiveCount() {
+  const count = Math.floor(Math.random() * 60) + 220;
+  document.getElementById('live-count').textContent = `${count} online`;
+}
+setInterval(updateLiveCount, 6000);
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  updateLiveCount();
+});
+
+// ========== Live Discord Status with Lanyard ==========
+const DISCORD_USER_ID = '1020906262931701790'; // Replace with your ID
+const presenceElement = document.getElementById('discord-presence');
+
+async function fetchDiscordStatus() {
+  try {
+    const response = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
+    const data = await response.json();
+    
+    if (data.success && data.data) {
+      updatePresenceUI(data.data);
+    } else {
+      showPresenceError('User not tracked', 'Join Lanyard Discord to enable');
+    }
+  } catch (error) {
+    console.error('Lanyard API error:', error);
+    showPresenceError('Connection error', 'Please check back later');
+  }
+}
+
+function updatePresenceUI(data) {
+  const { discord_status, activities, discord_user } = data;
+  
+  // Determine avatar URL
+  const avatarUrl = discord_user.avatar 
+    ? `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${discord_user.avatar}.png?size=64`
+    : `https://cdn.discordapp.com/embed/avatars/${discord_user.discriminator % 5}.png`;
+
+  // Find custom status or current activity
+  const customStatus = activities.find(a => a.type === 4);
+  const currentActivity = activities.find(a => a.type === 0); // Playing
+
+  let activityHtml = '';
+  
+  if (customStatus) {
+    activityHtml = `
+      <div class="presence-activity">
+        <span>${customStatus.emoji ? customStatus.emoji.name + ' ' : ''}${customStatus.state || 'Custom Status'}</span>
+      </div>
+    `;
+  } else if (currentActivity) {
+    const timestamps = currentActivity.timestamps;
+    let timeString = '';
+    
+    if (timestamps && timestamps.start) {
+      const elapsed = Math.floor((Date.now() - timestamps.start) / 60000); // minutes
+      timeString = `${elapsed} minutes elapsed`;
+    }
+    
+    activityHtml = `
+      <div class="presence-activity">
+        <span>Playing ${currentActivity.name}</span>
+        ${currentActivity.details ? `<span>${currentActivity.details}</span>` : ''}
+        ${currentActivity.state ? `<span>${currentActivity.state}</span>` : ''}
+        ${timeString ? `<span class="presence-timestamp">${timeString}</span>` : ''}
+      </div>
+    `;
+  } else {
+    const statusText = {
+      'online': 'Online',
+      'idle': 'Idle',
+      'dnd': 'Do Not Disturb',
+      'offline': 'Offline'
+    };
+    activityHtml = `
+      <div class="presence-activity">
+        <span>${statusText[discord_status] || 'Offline'}</span>
+      </div>
+    `;
+  }
+  
+  presenceElement.innerHTML = `
+    <div class="presence-item ${discord_status}">
+      <img class="presence-avatar" src="${avatarUrl}" alt="Avatar">
+      <div class="presence-details">
+        <div class="presence-name">
+          ${discord_user.global_name || discord_user.username}
+          <span class="presence-status-dot ${discord_status}"></span>
+        </div>
+        ${activityHtml}
+      </div>
+    </div>
+  `;
+}
+
+function showPresenceError(message, hint) {
+  presenceElement.innerHTML = `
+    <div class="presence-error">
+      <span>${message}</span>
+      <small>${hint || ''}</small>
+    </div>
+  `;
+}
+
+// Initial fetch
+fetchDiscordStatus();
+
+// Update every 30 seconds
+setInterval(fetchDiscordStatus, 30000);
+</script>
+
+</body>
+</html>
